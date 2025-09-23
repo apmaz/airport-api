@@ -134,3 +134,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+REST_FRAMEWORK = {
+   "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+   "PAGE_SIZE": 10
+}
