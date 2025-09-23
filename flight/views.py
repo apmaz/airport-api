@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db.models import Count, F, Prefetch
 from rest_framework import mixins
 from rest_framework.exceptions import ValidationError
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from flight.models import (
@@ -89,8 +90,15 @@ class AirplaneViewSet(ModelViewSet):
         return AirplaneSerializer
 
 
+class FlightSetPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = "page_size"
+    max_page_size = 10
+
+
 class FlightViewSet(ModelViewSet):
     queryset = Flight.objects.all()
+    pagination_class = FlightSetPagination
 
     @staticmethod
     def _params_to_ints(query_string):
@@ -169,6 +177,12 @@ class FlightViewSet(ModelViewSet):
         return FlightSerializer
 
 
+class OrderSetPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = "page_size"
+    max_page_size = 10
+
+
 class OrderViewSet(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
@@ -178,6 +192,7 @@ class OrderViewSet(
 ):
 
     queryset = Order.objects.all()
+    pagination_class = OrderSetPagination
 
     def get_queryset(self):
         queryset = super().get_queryset().filter(user=self.request.user)
