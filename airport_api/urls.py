@@ -25,5 +25,6 @@ from airport_api import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/airport/", include("flight.urls", namespace="flight")),
+    path("api/v1/user/", include("user.urls", namespace="user")),
     path("__debug__/", include("debug_toolbar.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
