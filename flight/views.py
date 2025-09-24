@@ -4,6 +4,7 @@ from django.db.models import Count, F, Prefetch
 from rest_framework import mixins
 from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from flight.models import (
@@ -192,6 +193,7 @@ class OrderViewSet(
 ):
 
     queryset = Order.objects.all()
+    permission_classes = (IsAuthenticated,)
     pagination_class = OrderSetPagination
 
     def get_queryset(self):
@@ -230,6 +232,7 @@ class TicketViewSet(ModelViewSet):
         "flight__route__source",
         "flight__route__destination"
     )
+    permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
         if self.action == "list":
