@@ -1,14 +1,19 @@
 from datetime import datetime
 
 from django.db.models import Count, F, Prefetch
+
 from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import OpenApiParameter
+from drf_spectacular.utils import (
+    OpenApiParameter,
+    OpenApiExample,
+    extend_schema,
+)
+
 from rest_framework import mixins
 from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from drf_spectacular.utils import extend_schema
 
 from flight.models import (
     Crew,
@@ -18,8 +23,9 @@ from flight.models import (
     Airplane,
     Flight,
     Order,
-    Ticket
+    Ticket,
 )
+
 from flight.serializers import (
     CrewSerializer,
     CrewListSerializer,
@@ -50,7 +56,6 @@ class CrewViewSet(ModelViewSet):
         request=CrewSerializer,
         responses={201: CrewSerializer},
     )
-
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
@@ -65,6 +70,121 @@ class RouteViewSet(ModelViewSet):
         "source",
         "destination"
     )
+
+    @extend_schema(
+        request=RouteSerializer,
+        responses=RouteSerializer,
+        examples=[
+            OpenApiExample(
+                "Create Route Example",
+                value={
+                    "source": 0,
+                    "destination": 0,
+                    "distance": 0
+                },
+                request_only=True,
+            ),
+            OpenApiExample(
+                "Created Route Example",
+                value={
+                    "id": 0,
+                    "source": 0,
+                    "destination": 0,
+                    "distance": 0
+                },
+                response_only=True,
+            )
+        ]
+    )
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+
+    @extend_schema(
+        responses=RouteRetrieveSerializer,
+        examples=[
+            OpenApiExample(
+                "Retrieve Route Example",
+                value={
+                    "id": 0,
+                    "source": {
+                        "id": 0,
+                        "name": "string",
+                        "location_city": "string",
+                        "closest_big_city": "string"
+                    },
+                    "destination": {
+                        "id": 0,
+                        "name": "string",
+                        "location_city": "string",
+                        "closest_big_city": "string"
+                    },
+                    "distance": 0
+                },
+                response_only=True
+            )
+        ]
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+
+    @extend_schema(
+        request=RouteSerializer,
+        responses=RouteSerializer,
+        examples=[
+            OpenApiExample(
+                "Update Route Example",
+                value={
+                    "source": 0,
+                    "destination": 0,
+                    "distance": 0
+                },
+                request_only=True,
+            ),
+            OpenApiExample(
+                "Updated Route Example",
+                value={
+                    "id": 0,
+                    "source": 0,
+                    "destination": 0,
+                    "distance": 0
+                },
+                response_only=True,
+            )
+        ]
+    )
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+
+    @extend_schema(
+        request=RouteSerializer,
+        responses=RouteSerializer,
+        examples=[
+            OpenApiExample(
+                "Partial update Route Example",
+                value={
+                    "source": 0,
+                    "destination": 0,
+                    "distance": 0
+                },
+                request_only=True,
+            ),
+            OpenApiExample(
+                "Partial updated Route Example",
+                value={
+                    "id": 0,
+                    "source": 0,
+                    "destination": 0,
+                    "distance": 0
+                },
+                response_only=True,
+            )
+        ]
+    )
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -90,6 +210,121 @@ class AirplaneViewSet(ModelViewSet):
     )
     serializer_class = AirplaneSerializer
 
+    @extend_schema(
+        request=AirplaneSerializer,
+        responses=AirplaneSerializer,
+        examples=[
+            OpenApiExample(
+                "Create Airplane Example",
+                value={
+                    "name": "string",
+                    "rows": 0,
+                    "seats_in_row": 0,
+                    "airplane_type": 0
+                },
+                request_only=True,
+            ),
+            OpenApiExample(
+                "Created Airplane Example",
+                value={
+                      "id": 0,
+                      "name": "string",
+                      "rows": 0,
+                      "seats_in_row": 0,
+                      "airplane_type": 0
+                },
+                response_only=True,
+            )
+        ]
+    )
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+
+    @extend_schema(
+        responses=AirplaneRetrieveSerializer,
+        examples=[
+            OpenApiExample(
+                "Retrieve Airplane Example",
+                value={
+                    "id": 0,
+                    "name": "string",
+                    "rows": 0,
+                    "seats_in_row": 0,
+                    "capacity": 0,
+                    "airplane_type": {
+                        "id": 0,
+                        "name": "string"
+                      }
+                },
+                response_only=True
+            )
+        ]
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+
+    @extend_schema(
+        request=AirplaneSerializer,
+        responses=AirplaneSerializer,
+        examples=[
+            OpenApiExample(
+                "Update Airplane Example",
+                value={
+                    "name": "string",
+                    "rows": 0,
+                    "seats_in_row": 0,
+                    "airplane_type": 0
+                },
+                request_only=True,
+            ),
+            OpenApiExample(
+                "Updated Airplane Example",
+                value={
+                    "id": 0,
+                    "name": "string",
+                    "rows": 0,
+                    "seats_in_row": 0,
+                    "airplane_type": 0
+                },
+                response_only=True,
+            )
+        ]
+    )
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+
+    @extend_schema(
+        request=AirplaneSerializer,
+        responses=AirplaneSerializer,
+        examples=[
+            OpenApiExample(
+                "Partial update Airplane Example",
+                value={
+                    "name": "string",
+                    "rows": 0,
+                    "seats_in_row": 0,
+                    "airplane_type": 0
+                },
+                request_only=True,
+            ),
+            OpenApiExample(
+                "Partial updated Airplane Example",
+                value={
+                    "id": 0,
+                    "name": "string",
+                    "rows": 0,
+                    "seats_in_row": 0,
+                    "airplane_type": 0
+                },
+                response_only=True,
+            )
+        ]
+    )
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -178,6 +413,7 @@ class FlightViewSet(ModelViewSet):
 
         return queryset
 
+
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -206,9 +442,63 @@ class FlightViewSet(ModelViewSet):
             ),
         ]
     )
-
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+    @extend_schema(
+        responses=FlightRetrieveSerializer,
+        examples=[
+            OpenApiExample(
+                "Retrieve Flight Example",
+                value={
+                    "id": 0,
+                    "route": {
+                        "id": 0,
+                        "source": {
+                            "id": 0,
+                            "name": "string",
+                            "location_city": "string",
+                            "closest_big_city": "string"
+                        },
+                        "destination": {
+                            "id": 0,
+                            "name": "string",
+                            "location_city": "string",
+                            "closest_big_city": "string"
+                        },
+                        "distance": 0
+                    },
+                    "airplane": {
+                        "id": 0,
+                        "name": "string",
+                        "rows": 0,
+                        "seats_in_row": 0,
+                        "capacity": 0,
+                        "airplane_type": {
+                            "id": 0,
+                            "name": "string"
+                        }
+                    },
+                    "departure_time": "2025-09-25T17:45:54.583Z",
+                    "arrival_time": "2025-09-25T17:45:54.583Z",
+                    "crew": [
+                        "string"
+                    ],
+                    "tickets_available": 0,
+                    "sold_tickets": [
+                        {
+                            "row": 0,
+                            "seat": 0
+                        }
+                    ]
+                },
+                response_only=True
+            )
+        ]
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -256,6 +546,71 @@ class OrderViewSet(
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    @extend_schema(
+        request=OrderSerializer,
+        responses=OrderSerializer,
+        examples=[
+            OpenApiExample(
+                "Create Order Example",
+                value={
+                    "tickets": [
+                        {
+                          "flight": 0,
+                          "row": 0,
+                          "seat": 0
+                        }
+                    ]
+                },
+                request_only=True,
+            ),
+            OpenApiExample(
+                "Created Order Example",
+                value={
+                    "id": 0,
+                    "created_at": "2025-09-25T11:02:51.191Z",
+                    "tickets": [
+                        {
+                          "id": 0,
+                          "flight": 0,
+                          "row": 0,
+                          "seat": 0
+                        }
+                      ]
+                },
+                response_only=True,
+            )
+        ]
+    )
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+
+    @extend_schema(
+        responses=OrderRetrieveSerializer,
+        examples=[
+            OpenApiExample(
+                "Retrieve Order Example",
+                value={
+                    "id": 0,
+                    "created_at": "2025-09-25T10:53:23.816Z",
+                    "tickets": [
+                        {
+                            "id": 0,
+                            "flight": "string",
+                            "airplane_type": "string",
+                            "airplane_name": "string",
+                            "row": 0,
+                            "seat": 0
+                        }
+                    ]
+                },
+                response_only=True
+            )
+        ]
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
     def get_serializer_class(self):
         if self.action == "list":
