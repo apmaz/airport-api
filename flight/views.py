@@ -1,11 +1,14 @@
 from datetime import datetime
 
 from django.db.models import Count, F, Prefetch
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter
 from rest_framework import mixins
 from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from drf_spectacular.utils import extend_schema
 
 from flight.models import (
     Crew,
@@ -42,6 +45,11 @@ from flight.serializers import (
 
 class CrewViewSet(ModelViewSet):
     queryset = Crew.objects.all()
+
+    @extend_schema(
+        request=CrewSerializer,
+        responses={201: CrewSerializer},
+    )
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
@@ -169,6 +177,38 @@ class FlightViewSet(ModelViewSet):
             queryset = queryset
 
         return queryset
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="flight_source",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description="Filter by flight source ID (ex., ?flight_source=1)",
+            ),
+            OpenApiParameter(
+                name="flight_destination",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description="Filter by flight destination ID (ex., ?flight_destination=2)",
+            ),
+            OpenApiParameter(
+                name="departure_time",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                description="Filter by departure time (ex., ?departure_time=2016-09-17-10:05)",
+            ),
+            OpenApiParameter(
+                name="arrival_time",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                description="Filter by arrival_time (ex., ?arrival_time=2016-09-17-10:05)",
+            ),
+        ]
+    )
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     def get_serializer_class(self):
         if self.action == "list":
