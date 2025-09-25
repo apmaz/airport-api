@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "user",
     "rest_framework",
     "debug_toolbar",
+    "drf_spectacular",
 ]
 
 AUTH_USER_MODEL = "user.User"
@@ -151,7 +152,8 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
        "anon": "100/day",
        "user": "1000/day"
-    }
+    },
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 
@@ -159,4 +161,19 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(hours=5),
     "ROTATE_REFRESH_TOKENS": False,
+}
+
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Airport API",
+    "DESCRIPTION": "Project intended for managing airport flights",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "COMPONENT_SPLIT_REQUEST": True,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelsExpandDepth": 2,
+        "defaultModelExpandDepth": 2,
+    }
 }
