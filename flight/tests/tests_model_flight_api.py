@@ -474,6 +474,20 @@ class AdminFlightApiTest(BaseFlightAPITest):
         self.assertEqual(sorted(payload["crew"]), sorted(flight.crew.values_list("id", flat=True)))
         self.assertEqual(len(payload["crew"]), flight.crew.count())
 
+    def test_admin_create_duplicate_flight_returns_400(self):
+        departure_time = timezone.make_aware(datetime(2025, 9, 10, 17, 00))
+        arrival_time = timezone.make_aware(datetime(2025, 9, 10, 20, 00))
+        payload = {
+            "route": self.route_1.id,
+            "airplane": self.airplane.id,
+            "crew": (self.crew_1.id, self.crew_2.id),
+            "departure_time": departure_time,
+            "arrival_time": arrival_time,
+        }
+        res = self.client.post(FLIGHT_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_admin_create_flight_without_route_returns_400(self):
         departure_time = timezone.make_aware(datetime(2025, 9, 12, 14, 00))
         arrival_time = timezone.make_aware(datetime(2025, 9, 12, 19, 00))
