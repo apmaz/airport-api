@@ -26,6 +26,13 @@ class Flight(models.Model):
             models.Index(fields=["arrival_time"]),
             models.Index(fields=["route"]),
         ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["route", "airplane", "departure_time", "arrival_time"],
+                name="unique_route_airplane_departure_time_arrival_time",
+            )
+        ]
+
 
     @property
     def flight_info(self) -> str:
