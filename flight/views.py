@@ -303,7 +303,7 @@ class FlightSetPagination(PageNumberPagination):
 
 
 class FlightViewSet(ModelViewSet):
-    queryset = Flight.objects.all()
+    queryset = Flight.objects.all().order_by("id")
     pagination_class = FlightSetPagination
 
     @staticmethod
