@@ -33,7 +33,6 @@ class Flight(models.Model):
             )
         ]
 
-
     @property
     def flight_info(self) -> str:
         return (
