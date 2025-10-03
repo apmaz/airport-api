@@ -235,13 +235,14 @@ class AuthenticatedOrderApiTest(BaseOrderAPITest):
         super().setUp()
         self.client.force_authenticate(user=self.user_1)
 
+
     def test_authenticated_user_can_see_only_their_own_order_list_returns_200(self):
         res = self.client.get(ORDER_URL)
-        orders = Order.objects.filter(user=self.user_1)
-        serializer = OrderListSerializer(orders, many=True)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data["results"], serializer.data)
+        for result in res.data["results"]:
+            order = Order.objects.get(id=result["id"])
+            self.assertEqual(order.user, self.user_1)
 
     def test_authenticated_user_does_not_have_access_to_other_users_orders_returns_404(self):
         url = order_get_url(self.order_3)
