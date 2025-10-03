@@ -145,24 +145,24 @@ class BaseFlightAPITest(TestCase):
         self.flight_1 = Flight.objects.create(
             route=self.route_1,
             airplane=self.airplane,
-            departure_time=datetime(2025, 9, 10, 17, 0),
-            arrival_time=datetime(2025, 9, 10, 20, 0),
+            departure_time=timezone.make_aware(datetime(2025, 9, 10, 17, 00)),
+            arrival_time=timezone.make_aware(datetime(2025, 9, 10, 20, 00)),
         )
         self.flight_1.crew.add(self.crew_1, self.crew_2)
 
         self.flight_2 = Flight.objects.create(
             route=self.route_2,
             airplane=self.airplane,
-            departure_time=datetime(2025, 9, 16, 22, 0),
-            arrival_time=datetime(2025, 9, 17, 6, 0),
+            departure_time=timezone.make_aware(datetime(2025, 9, 16, 22, 00)),
+            arrival_time=timezone.make_aware(datetime(2025, 9, 17, 6, 00)),
         )
         self.flight_2.crew.add(self.crew_1, self.crew_2)
 
         self.flight_3 = Flight.objects.create(
             route=self.route_3,
             airplane=self.airplane,
-            departure_time=datetime(2025, 9, 17, 14, 30),
-            arrival_time=datetime(2025, 9, 18, 2, 0),
+            departure_time=timezone.make_aware(datetime(2025, 9, 17, 14, 30)),
+            arrival_time=timezone.make_aware(datetime(2025, 9, 18, 2, 00)),
         )
         self.flight_3.crew.add(self.crew_1, self.crew_2)
 
@@ -292,8 +292,8 @@ class UnauthenticatedFlightApiTest(BaseFlightAPITest):
         payload = {
             "route": self.route_1,
             "airplane": self.airplane,
-            "departure_time": datetime(2025, 9, 12, 14, 0),
-            "arrival_time": datetime(2025, 9, 12, 19, 0),
+            "departure_time": timezone.make_aware(datetime(2025, 9, 12, 14, 00)),
+            "arrival_time": timezone.make_aware(datetime(2025, 9, 12, 19, 00)),
         }
         res = self.client.post(FLIGHT_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -301,8 +301,8 @@ class UnauthenticatedFlightApiTest(BaseFlightAPITest):
     def test_unauthenticated_user_cannot_patch_flight_returns_401(self):
         url = flight_get_url(self.flight_1)
         payload = {
-            "departure_time": datetime(2025, 9, 14, 14, 0),
-            "arrival_time": datetime(2025, 9, 14, 19, 0),
+            "departure_time": timezone.make_aware(datetime(2025, 9, 14, 14, 00)),
+            "arrival_time": timezone.make_aware(datetime(2025, 9, 14, 19, 00)),
         }
         res = self.client.patch(url, payload)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -312,8 +312,8 @@ class UnauthenticatedFlightApiTest(BaseFlightAPITest):
         payload = {
             "route": self.route_2,
             "airplane": self.airplane,
-            "departure_time": datetime(2025, 9, 12, 14, 0),
-            "arrival_time": datetime(2025, 9, 12, 19, 0),
+            "departure_time": timezone.make_aware(datetime(2025, 9, 12, 14, 00)),
+            "arrival_time": timezone.make_aware(datetime(2025, 9, 12, 19, 00)),
         }
         res = self.client.put(url, payload)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -358,8 +358,8 @@ class AuthenticatedFlightApiTest(BaseFlightAPITest):
         payload = {
             "route": self.route_1,
             "airplane": self.airplane,
-            "departure_time": datetime(2025, 9, 12, 14, 00),
-            "arrival_time": datetime(2025, 9, 12, 19, 00),
+            "departure_time": timezone.make_aware(datetime(2025, 9, 12, 14, 00)),
+            "arrival_time": timezone.make_aware(datetime(2025, 9, 12, 19, 00)),
         }
         res = self.client.post(FLIGHT_URL, payload)
 
@@ -368,8 +368,8 @@ class AuthenticatedFlightApiTest(BaseFlightAPITest):
     def test_authenticated_user_cannot_patch_flight_returns_403(self):
         url = flight_get_url(self.flight_1)
         payload = {
-            "departure_time": datetime(2025, 9, 14, 14, 00),
-            "arrival_time": datetime(2025, 9, 14, 19, 00),
+            "departure_time": timezone.make_aware(datetime(2025, 9, 14, 14, 00)),
+            "arrival_time": timezone.make_aware(datetime(2025, 9, 14, 19, 00)),
         }
         res = self.client.patch(url, payload)
 
@@ -380,8 +380,8 @@ class AuthenticatedFlightApiTest(BaseFlightAPITest):
         payload = {
             "route": self.route_2,
             "airplane": self.airplane,
-            "departure_time": datetime(2025, 9, 12, 14, 00),
-            "arrival_time": datetime(2025, 9, 12, 19, 00),
+            "departure_time": timezone.make_aware(datetime(2025, 9, 12, 14, 00)),
+            "arrival_time": timezone.make_aware(datetime(2025, 9, 12, 19, 00)),
         }
         res = self.client.put(url, payload)
 
